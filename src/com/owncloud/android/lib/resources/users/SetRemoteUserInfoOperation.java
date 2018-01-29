@@ -33,13 +33,7 @@ public class SetRemoteUserInfoOperation extends RemoteOperation {
 
     private static final String TAG = SetRemoteUserInfoOperation.class.getSimpleName();
 
-    private static final String OCS_ROUTE_PATH = "/ocs/v1.php/users/";
-
-    public static final String FIELD_EMAIL = "email";
-    public static final String FIELD_PHONE = "phone";
-    public static final String FIELD_ADDRESS = "address";
-    public static final String FIELD_WEBPAGE = "webpage";
-    public static final String FIELD_TWITTER = "twitter";
+    private static final String OCS_ROUTE_PATH = "/ocs/v1.php/cloud/users/";
 
     private static final String ENTITY_CONTENT_TYPE = "application/x-www-form-urlencoded";
     private static final String ENTITY_CHARSET = "UTF-8";
