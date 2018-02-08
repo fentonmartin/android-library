@@ -7,12 +7,22 @@ import android.os.Bundle;
 import com.owncloud.android.lib.common.OwnCloudBasicCredentials;
 import com.owncloud.android.lib.common.OwnCloudClient;
 import com.owncloud.android.lib.common.OwnCloudClientFactory;
+import com.owncloud.android.lib.resources.files.ReadFolderRemoteOperation;
+import com.owncloud.android.lib.resources.files.RemoveFileRemoteOperation;
+import com.owncloud.android.lib.resources.files.model.RemoteFile;
 
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+
+import static junit.framework.TestCase.assertTrue;
 
 /**
  * Common base for all integration tests
@@ -20,18 +30,44 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 @RunWith(AndroidJUnit4.class)
 public abstract class AbstractIT {
-    static OwnCloudClient client;
+    protected static OwnCloudClient client;
+    protected static String userId;
+    protected static Context context;
 
     @BeforeClass
     public static void beforeAll() {
         Bundle arguments = InstrumentationRegistry.getArguments();
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         Uri url = Uri.parse(arguments.getString("TEST_SERVER_URL"));
-        String username = arguments.getString("TEST_SERVER_USERNAME");
+        userId = arguments.getString("TEST_SERVER_USERNAME");
         String password = arguments.getString("TEST_SERVER_PASSWORD");
 
         client = OwnCloudClientFactory.createOwnCloudClient(url, context, true);
-        client.setCredentials(new OwnCloudBasicCredentials(username, password));
+        client.setCredentials(new OwnCloudBasicCredentials(userId, password));
+    }
+
+    public String createFile(String name) throws IOException {
+        File tempDir = context.getFilesDir();
+
+        File file = new File(tempDir + File.separator + name);
+        file.createNewFile();
+
+        assertTrue(file.exists());
+
+        return file.getAbsolutePath();
+    }
+
+    @After
+    public void after() {
+        ArrayList list = new ReadFolderRemoteOperation("/").execute(client).getData();
+
+        for (Object object : list) {
+            RemoteFile remoteFile = (RemoteFile) object;
+
+            if (!remoteFile.getRemotePath().equals("/")) {
+                new RemoveFileRemoteOperation(remoteFile.getRemotePath()).execute(client);
+            }
+        }
     }
 }
