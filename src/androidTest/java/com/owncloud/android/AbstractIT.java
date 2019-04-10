@@ -20,7 +20,8 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 @RunWith(AndroidJUnit4.class)
 public abstract class AbstractIT {
-    static OwnCloudClient client;
+    protected static OwnCloudClient client;
+    protected static String userId;
 
     @BeforeClass
     public static void beforeAll() {
@@ -28,10 +29,10 @@ public abstract class AbstractIT {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         Uri url = Uri.parse(arguments.getString("TEST_SERVER_URL"));
-        String username = arguments.getString("TEST_SERVER_USERNAME");
+        userId = arguments.getString("TEST_SERVER_USERNAME");
         String password = arguments.getString("TEST_SERVER_PASSWORD");
 
         client = OwnCloudClientFactory.createOwnCloudClient(url, context, true);
-        client.setCredentials(new OwnCloudBasicCredentials(username, password));
+        client.setCredentials(new OwnCloudBasicCredentials(userId, password));
     }
 }
