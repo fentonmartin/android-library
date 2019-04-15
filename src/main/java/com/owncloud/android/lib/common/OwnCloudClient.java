@@ -91,7 +91,7 @@ public class OwnCloudClient extends HttpClient {
 
         String userAgent;
 
-        userAgent = OwnCloudClientManagerFactory.getNextcloudUserAgent();
+        userAgent = OwnCloudClientManagerFactory.getUserAgent();
         
         getParams().setParameter(HttpMethodParams.USER_AGENT, userAgent);
         getParams().setParameter(PARAM_PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
@@ -211,12 +211,9 @@ public class OwnCloudClient extends HttpClient {
             // Update User Agent
             HttpParams params = method.getParams();
 
-            String userAgent;
-            userAgent = OwnCloudClientManagerFactory.getNextcloudUserAgent();
-            params.setParameter(HttpMethodParams.USER_AGENT, userAgent);
+            params.setParameter(HttpMethodParams.USER_AGENT, OwnCloudClientManagerFactory.getUserAgent());
 
-            Log_OC.d(TAG + " #" + mInstanceNumber, "REQUEST " +
-                    method.getName() + " " + method.getPath());
+            Log_OC.d(TAG + " #" + mInstanceNumber, "REQUEST " + method.getName() + " " + method.getPath());
 
 //	        logCookiesAtRequest(method.getRequestHeaders(), "before");
 //	        logCookiesAtState("before");
