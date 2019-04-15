@@ -73,7 +73,7 @@ public class OwnCloudClient extends HttpClient {
     
     @Getter private Uri baseUri;
     @Getter @Setter private OwnCloudVersion ownCloudVersion = null;
-    @Getter @Setter private String userId;
+    @Setter private String userId;
 
     /**
      * Constructor
@@ -438,5 +438,14 @@ public class OwnCloudClient extends HttpClient {
     			(cookie.getExpiryDate() != null ? cookie.getExpiryDate().toString() : "--"));
     	Log_OC.d(TAG, "       comment: "+ cookie.getComment() );
     	Log_OC.d(TAG, "       secure: "+ cookie.getSecure() );
+    }
+
+    /**
+     * Returns internally, never changing id of user
+     *
+     * @return uri-encoded userId
+     */
+    public String getUserId() {
+        return Uri.encode(userId);
     }
 }
